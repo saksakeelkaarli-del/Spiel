@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Julius ja saksa keele muster</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0efe8;min-height:100vh;padding:1.5rem 1rem 3rem;display:flex;justify-content:center}
+#app{width:100%;max-width:520px}
+@keyframes jb{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes js{0%,100%{transform:translateX(0)}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.jb{animation:jb .7s ease infinite;display:inline-block}
+.js{animation:js .4s ease;display:inline-block}
+.screen{display:none}.screen.active{display:block}
+h1{font-size:21px;font-weight:700;color:#1a1a1a;margin:0 0 6px}
+h2{font-size:18px;font-weight:700;color:#1a1a1a;margin:0 0 14px}
+p{line-height:1.6}
+.badge{display:inline-block;background:#EEEDFE;border:1.5px solid #AFA9EC;border-radius:6px;padding:3px 12px;font-size:11px;font-weight:600;color:#26215C}
+.julius-box{display:flex;gap:12px;align-items:flex-start;margin-bottom:14px}
+.julius-ghost{font-size:40px;line-height:1;flex-shrink:0}
+.julius-bubble{background:#e8e7e0;border:1px solid rgba(0,0,0,.1);border-radius:0 14px 14px 14px;padding:10px 14px;flex:1}
+.julius-label{font-size:10px;color:#888;font-weight:600;letter-spacing:.07em;text-transform:uppercase;margin-bottom:4px}
+.julius-msg{font-size:14px;color:#1a1a1a;line-height:1.6}
+.info-box{background:#e8e7e0;border-radius:10px;padding:14px 16px;margin-bottom:16px}
+.info-box p{font-size:13px;color:#555;margin:3px 0}
+.info-title{font-size:14px;font-weight:600;color:#1a1a1a;margin-bottom:8px!important}
+.room-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.room-card{border-radius:10px;padding:12px 14px;border:1.5px solid}
+.room-card-emoji{font-size:22px}
+.room-card-title{font-size:13px;font-weight:600;margin:5px 0 2px}
+.room-card-de{font-size:11px}
+.btn-main{background:#534AB7;color:#fff;border:none;border-radius:10px;padding:14px 32px;font-size:16px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-main:hover{filter:brightness(.9)}
+.btn-retry{background:#e8e7e0;color:#1a1a1a;border:1px solid rgba(0,0,0,.15);border-radius:10px;padding:13px 28px;font-size:15px;font-weight:600;cursor:pointer;font-family:inherit}
+.btn-retry:hover{filter:brightness(.95)}
+.progress-bar-wrap{background:rgba(0,0,0,.1);height:6px;border-radius:3px;margin-top:5px;overflow:hidden}
+.progress-bar-fill{height:100%;border-radius:3px;transition:width .5s ease}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.prog-emoji{font-size:24px}
+.prog-title{font-weight:600;font-size:14px;color:#1a1a1a;margin-bottom:3px}
+.prog-counter{font-size:12px;color:#888;min-width:36px;text-align:right}
+.question-card{border-radius:14px;padding:22px 18px;text-align:center;margin-bottom:14px;border:1.5px solid}
+.question-label{font-size:10px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.question-text{font-size:24px;font-weight:700;line-height:1.3}
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
+.opt-btn{border-radius:9px;padding:13px 10px;font-size:14px;font-weight:500;cursor:pointer;width:100%;text-align:center;line-height:1.3;font-family:inherit;transition:filter .15s}
+.opt-btn:hover:not([disabled]){filter:brightness(.93)}
+.opt-btn:disabled{cursor:default}
+.opt-normal{background:#fff;border:1px solid rgba(0,0,0,.12);color:#1a1a1a}
+.opt-ok{background:#eaf3de;border:1.5px solid #639922;color:#3b6d11}
+.opt-fail{background:#fcebeb;border:1.5px solid #e24b4a;color:#a32d2d}
+.hint-row{display:flex;justify-content:space-between;align-items:center}
+.hint-btn{background:transparent;border:1px solid rgba(0,0,0,.12);border-radius:8px;padding:7px 14px;font-size:12px;cursor:pointer;font-family:inherit}
+.score-txt{font-size:12px;color:#888}
+.result-center{text-align:center;padding-top:1.5rem}
+.result-icon{font-size:56px;margin-bottom:14px}
+.result-score-box{display:inline-block;border-radius:10px;padding:10px 24px;margin-bottom:20px;font-size:18px;font-weight:700}
+.score-ok{background:#eaf3de;border:1.5px solid #639922;color:#3b6d11}
+.score-fail{background:#fcebeb;border:1.5px solid #e24b4a;color:#a32d2d}
+.victory-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.victory-card{border-radius:10px;padding:11px 13px;text-align:left;border:1.5px solid}
+.victory-card-title{font-size:12px;font-weight:600;margin-bottom:4px}
+.victory-card-score{font-size:20px;font-weight:700}
+.total-box{background:#e8e7e0;border-radius:10px;padding:14px;margin-bottom:20px;text-align:center}
+.total-label{font-size:12px;color:#888;margin-bottom:4px}
+.total-score{font-size:26px;font-weight:700;color:#1a1a1a}
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- INTRO -->
+<div id="s-intro" class="screen active">
+  <div style="text-align:center;margin-bottom:18px">
+    <div class="jb" style="font-size:62px;line-height:1;margin-bottom:10px">👻</div>
+    <h1>Julius ja saksa keele musteerium</h1>
+    <span class="badge">Saksa keel A1 · Põgenemismäng</span>
+  </div>
+  <div class="julius-box">
+    <div class="julius-ghost jb">👻</div>
+    <div class="julius-bubble">
+      <div class="julius-label">🤩 Julius räägib:</div>
+      <div class="julius-msg">Tere! Mina olen Julius – selle vana maja vaim! Olen siin 100 aastat kinni olnud. Ainult saksa keele teadmised saavad mind vabastada! Kas sa aitad mind? 🗝️</div>
+    </div>
+  </div>
+  <div class="info-box">
+    <p class="info-title">Kuidas mängida:</p>
+    <p>🔐  Lahenda 4 saksa keele tuba</p>
+    <p>✅  Vali iga küsimuse jaoks õige eesti vaste</p>
+    <p>💡  Vajuta vihjete nuppu, kui jääd hätta</p>
+    <p>🗝️  Vaja 4/5 õiget vastust, et uks avaneks</p>
+    <p>🔄  Ebaõnnestumise korral saad uuesti proovida</p>
+  </div>
+  <div class="room-grid" id="intro-rooms"></div>
+  <div style="text-align:center">
+    <button class="btn-main" onclick="startGame()">Aita Juliust! →</button>
+  </div>
+</div>
+
+<!-- PLAYING -->
+<div id="s-playing" class="screen">
+  <div class="prog-row">
+    <span class="prog-emoji" id="p-emoji"></span>
+    <div style="flex:1">
+      <div class="prog-title" id="p-title"></div>
+      <div class="progress-bar-wrap">
+        <div class="progress-bar-fill" id="p-bar" style="width:0%"></div>
+      </div>
+    </div>
+    <span class="prog-counter" id="p-counter"></span>
+  </div>
+  <div class="julius-box">
+    <div class="julius-ghost" id="j-ghost">👻</div>
+    <div class="julius-bubble">
+      <div class="julius-label" id="j-label"></div>
+      <div class="julius-msg" id="j-msg"></div>
+    </div>
+  </div>
+  <div class="question-card" id="q-card">
+    <div class="question-label" id="q-label"></div>
+    <div class="question-text" id="q-text"></div>
+  </div>
+  <div class="opts-grid" id="opts-grid"></div>
+  <div class="hint-row">
+    <button class="hint-btn" id="hint-btn" onclick="toggleHint()">💡 Vihje</button>
+    <span class="score-txt" id="score-txt">✓ 0 õiget</span>
+  </div>
+</div>
+
+<!-- ROOM RESULT -->
+<div id="s-result" class="screen">
+  <div class="result-center">
+    <div class="result-icon" id="r-icon"></div>
+    <h2 id="r-title"></h2>
+    <div class="julius-box" style="text-align:left">
+      <div class="julius-ghost" id="r-ghost">👻</div>
+      <div class="julius-bubble">
+        <div class="julius-label" id="r-jlabel"></div>
+        <div class="julius-msg" id="r-jmsg"></div>
+      </div>
+    </div>
+    <div class="result-score-box" id="r-score-box"></div>
+    <br><br>
+    <button id="r-btn" onclick="resultAction()"></button>
+  </div>
+</div>
+
+<!-- VICTORY -->
+<div id="s-victory" class="screen">
+  <div style="text-align:center;padding-top:1rem">
+    <div class="jb" style="font-size:62px;margin-bottom:10px;display:inline-block" id="v-medal"></div>
+    <h1 style="margin-bottom:6px">Julius on vaba! 🎊</h1>
+    <div class="julius-box" style="text-align:left;margin-top:14px">
+      <div class="julius-ghost jb">👻</div>
+      <div class="julius-bubble">
+        <div class="julius-label">🤩 Julius räägib:</div>
+        <div class="julius-msg" id="v-msg"></div>
+      </div>
+    </div>
+    <div class="victory-grid" id="v-grid"></div>
+    <div class="total-box">
+      <div class="total-label">Kokku</div>
+      <div class="total-score" id="v-total"></div>
+    </div>
+    <button class="btn-retry" onclick="restartGame()">Mängi uuesti 🔄</button>
+  </div>
+</div>
+
+</div>
+<script>
+var ROOMS=[
+  {title:"Tuba 1: Perekond",de:"Familie",emoji:"🏠",bg:"#EEEDFE",accent:"#534AB7",tc:"#26215C",badge:"#AFA9EC",
+   intro:"Esimene tuba! Teema on PEREKOND – Familie. Vali iga saksa sõna jaoks õige eesti vaste!",
+   qs:[
+    {de:"die Mutter",right:"ema",opts:["ema","tädi","õde","vanaema"],hint:"Kõlab nagu inglise 'mother'.",exp:"die Mutter = ema"},
+    {de:"der Vater",right:"isa",opts:["vend","isa","onu","papa"],hint:"Kõlab nagu inglise 'father'.",exp:"der Vater = isa"},
+    {de:"die Schwester",right:"õde",opts:["vanaema","ema","õde","sõbranna"],hint:"Tüdruk-sugulane, kes elab sinuga koos.",exp:"die Schwester = õde"},
+    {de:"der Bruder",right:"vend",opts:["onu","nõbu","papa","vend"],hint:"Poiss-sugulane, kes elab sinuga koos.",exp:"der Bruder = vend"},
+    {de:"die Oma",right:"vanaema",opts:["ema","vanaema","tädi","sõber"],hint:"Emme emme – vanem daam perekonnas!",exp:"die Oma = vanaema"}
+  ]},
+  {title:"Tuba 2: Linn",de:"Stadt",emoji:"🏙",bg:"#E1F5EE",accent:"#0F6E56",tc:"#04342C",badge:"#5DCAA5",
+   intro:"Teine tuba! Teema on LINN – Stadt. Kas tunned saksa linna kohti?",
+   qs:[
+    {de:"der Bahnhof",right:"raudteejaam",opts:["lennujaam","raudteejaam","muuseum","kino"],hint:"'Bahn'=raudtee + 'Hof'=koht.",exp:"der Bahnhof = raudteejaam"},
+    {de:"die Bibliothek",right:"raamatukogu",opts:["raamatukogu","teater","restoran","park"],hint:"Seal saab raamatuid laenutada.",exp:"die Bibliothek = raamatukogu"},
+    {de:"die Brücke",right:"sild",opts:["torn","jõgi","sild","värav"],hint:"Ühendab kaht kallast üle vee.",exp:"die Brücke = sild"},
+    {de:"der Zoo",right:"loomaaed",opts:["park","järv","aed","loomaaed"],hint:"Seal elavad lõvid ja elevandid!",exp:"der Zoo = loomaaed"},
+    {de:"die Insel",right:"saar",opts:["jõgi","saar","järv","loss"],hint:"Maa, mida ümbritseb vesi.",exp:"die Insel = saar"}
+  ]},
+  {title:"Tuba 3: Loomad",de:"Tiere",emoji:"🐾",bg:"#FAEEDA",accent:"#854F0B",tc:"#412402",badge:"#EF9F27",
+   intro:"Kolmas tuba! Teema on LOOMAD – Tiere. Arva, mis loom see on saksa keeles!",
+   qs:[
+    {de:"Minka on see loom (kass)",right:"die Katze",opts:["der Hund","die Katze","die Maus","der Vogel"],hint:"Nurub ja tahab piima.",exp:"die Katze = kass"},
+    {de:"Kuldne loom, elab vees (kala)",right:"der Goldfisch",opts:["der Goldfisch","der Hamster","die Schildkröte","der Igel"],hint:"'Gold'=kuld + 'Fisch'=kala.",exp:"der Goldfisch = kuldkala"},
+    {de:"Söövad porgandeid (küülik)",right:"das Kaninchen",opts:["das Schaf","die Ziege","das Kaninchen","das Pferd"],hint:"Pikad kõrvad ja hüppab!",exp:"das Kaninchen = küülik"},
+    {de:"Aeglane, kodu seljas (kilpkonn)",right:"die Schildkröte",opts:["die Schildkröte","der Igel","die Maus","der Hamster"],hint:"'Schild'=kilp. Väga aeglane!",exp:"die Schildkröte = kilpkonn"},
+    {de:"Laulab, väike, kollane (lind)",right:"der Kanarienvogel",opts:["der Vogel","der Kanarienvogel","das Schaf","die Ziege"],hint:"'Vogel'=lind. Eriline laulev linnuke.",exp:"der Kanarienvogel = kanarialind"}
+  ]},
+  {title:"Tuba 4: Koolipäev",de:"Schultag",emoji:"🎒",bg:"#FAECE7",accent:"#993C1D",tc:"#4A1B0C",badge:"#F0797B",
+   intro:"Neljas ja VIIMANE tuba! Teema on KOOLIPÄEV – Schultag. Vabadus on lähedal!",
+   qs:[
+    {de:"frühstücken",right:"hommikusööki sööma",opts:["lõunat sööma","hommikusööki sööma","magama minema","kooli minema"],hint:"'früh'=vara hommikul. Mida sööd hommikul?",exp:"frühstücken = hommikusööki sööma"},
+    {de:"der Bleistift",right:"pliiats",opts:["kustukumm","vihik","pliiats","käärid"],hint:"'Blei'=plii + 'Stift'=kirjutusvahend.",exp:"der Bleistift = pliiats"},
+    {de:"die Pause",right:"vahetund",opts:["tunnigraafik","vahetund","õppeaine","matemaatika"],hint:"Koolis on see aeg, aga ei ole tund!",exp:"die Pause = vahetund"},
+    {de:"aufstehen",right:"voodist tõusma",opts:["magama minema","riidesse panema","voodist tõusma","hambaid pesema"],hint:"'auf'=üles + 'stehen'=seisma.",exp:"aufstehen = voodist tõusma"},
+    {de:"die Hausaufgabe",right:"kodutöö",opts:["koolipäev","kodutöö","raamat","tunnigraafik"],hint:"'Haus'=kodu + 'Aufgabe'=ülesanne.",exp:"die Hausaufgabe = kodutöö"}
+  ]}
+];
+
+var OKMSGS=["Suurepärane!","Täpselt õige!","Jaa! Nii see käib!","Perfekt!","Väga hästi!","Klasse!"];
+var PASS=4;
+var roomIdx=0,qIdx=0,score=0,roomScores=[],hintShown=false,okI=0,answered=false,lastFinal=0;
+
+function $(id){return document.getElementById(id);}
+function show(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active');});$(id).classList.add('active');}
+
+function buildIntroRooms(){
+  var g=$('intro-rooms'); g.innerHTML='';
+  ROOMS.forEach(function(r){
+    var d=document.createElement('div');
+    d.className='room-card';
+    d.style.background=r.bg;
+    d.style.borderColor=r.badge;
+    d.innerHTML='<div class="room-card-emoji">'+r.emoji+'</div><div class="room-card-title" style="color:'+r.tc+'">'+r.title+'</div><div class="room-card-de" style="color:'+r.accent+'">'+r.de+'</div>';
+    g.appendChild(d);
+  });
+}
+
+function setJulius(mood,msg){
+  var faces={happy:"😄",sad:"😟",excited:"🤩",thinking:"🤔",normal:"😊"};
+  var face=faces[mood]||"😊";
+  var anim=(mood==="excited"||mood==="happy")?"jb":mood==="sad"?"js":"";
+  $('j-ghost').className='julius-ghost '+anim;
+  $('j-label').textContent=face+' Julius räägib:';
+  $('j-msg').textContent=msg;
+}
+
+function startGame(){roomIdx=0;qIdx=0;score=0;roomScores=[];okI=0;loadRoom();}
+function restartGame(){startGame();show('s-intro');buildIntroRooms();}
+
+function loadRoom(){
+  qIdx=0;score=0;answered=false;hintShown=false;
+  var r=ROOMS[roomIdx];
+  $('p-emoji').textContent=r.emoji;
+  $('p-title').textContent=r.title;
+  $('p-bar').style.background=r.accent;
+  $('q-card').style.background=r.bg;
+  $('q-card').style.borderColor=r.badge;
+  $('q-label').style.color=r.accent;
+  $('hint-btn').style.color='#888';
+  show('s-playing');
+  loadQuestion();
+}
+
+function loadQuestion(){
+  answered=false;hintShown=false;
+  var r=ROOMS[roomIdx];
+  var q=r.qs[qIdx];
+  $('p-counter').textContent=(qIdx+1)+'/5';
+  $('p-bar').style.width=(qIdx/5*100)+'%';
+  $('q-label').textContent='Saksa keeles:';
+  $('q-text').textContent=q.de;
+  $('score-txt').textContent='✓ '+score+' õiget';
+  $('hint-btn').textContent='💡 Vihje';
+  $('hint-btn').style.color='#888';
+  $('hint-btn').disabled=false;
+
+  if(qIdx===0){setJulius('excited',r.intro);}
+  else if(qIdx===2){setJulius('normal','Pool teed tehtud! Jätka, läheb hästi! 💪');}
+  else{setJulius('normal','Küsimus '+(qIdx+1)+'/5. Vali õige eesti vaste!');}
+
+  var g=$('opts-grid'); g.innerHTML='';
+  q.opts.forEach(function(opt){
+    var b=document.createElement('button');
+    b.className='opt-btn opt-normal';
+    b.textContent=opt;
+    b.onclick=function(){answer(opt,b,q);};
+    g.appendChild(b);
+  });
+}
+
+function answer(opt,btn,q){
+  if(answered)return;
+  answered=true;
+  $('hint-btn').disabled=true;
+  var ok=opt===q.right;
+  if(ok){score++;setJulius('happy',OKMSGS[okI]);okI=(okI+1)%OKMSGS.length;}
+  else{setJulius('sad','Kahjuks vale! Õige vastus on "'+q.right+'". ('+q.exp+') Proovi järgmist!');}
+  var btns=$('opts-grid').querySelectorAll('button');
+  btns.forEach(function(b){
+    b.disabled=true;
+    if(b.textContent===q.right){b.className='opt-btn opt-ok';}
+    else if(b===btn&&!ok){b.className='opt-btn opt-fail';}
+  });
+  setTimeout(function(){
+    if(qIdx+1<5){qIdx++;loadQuestion();}
+    else{lastFinal=score;roomScores.push(score);showRoomResult();}
+  },1800);
+}
+
+function toggleHint(){
+  var r=ROOMS[roomIdx];
+  var q=r.qs[qIdx];
+  hintShown=!hintShown;
+  if(hintShown){
+    setJulius('thinking','💡 Vihje: '+q.hint);
+    $('hint-btn').textContent='Peida vihje';
+    $('hint-btn').style.color=r.accent;
+  } else {
+    if(qIdx===0){setJulius('excited',r.intro);}
+    else{setJulius('normal','Küsimus '+(qIdx+1)+'/5. Vali õige eesti vaste!');}
+    $('hint-btn').textContent='💡 Vihje';
+    $('hint-btn').style.color='#888';
+  }
+}
+
+function showRoomResult(){
+  var r=ROOMS[roomIdx];
+  var passed=lastFinal>=PASS;
+  var isLast=roomIdx>=ROOMS.length-1;
+  var stars=lastFinal===5?'⭐⭐⭐':lastFinal>=4?'⭐⭐':'⭐';
+  $('r-icon').textContent=passed?'🔓':'🔒';
+  $('r-icon').className='result-icon '+(passed?'jb':'js');
+  $('r-title').textContent=passed?(lastFinal===5?'Täiuslik tulemus!':'Uks on avatud!'):'Uks jäi lukku...';
+  var rg=$('r-ghost');
+  if(passed){rg.className='julius-ghost jb';}else{rg.className='julius-ghost js';}
+  $('r-jlabel').textContent=(passed?'😄':'😟')+' Julius räägib:';
+  if(passed){
+    $('r-jmsg').textContent=isLast?'SA TEGID SEDA! Kõik 4 tuba lahendatud! Vabadus on käes! 🎉':'Tuba avatud! KRÕÕÕKS! 🗝️'+(ROOMS[roomIdx+1]?' Järgmine: '+ROOMS[roomIdx+1].title+'!':'');
+  } else {
+    $('r-jmsg').textContent='Hmm, uks ei avane... Vaja on vähemalt '+PASS+'/5 õiget. Proovi uuesti!';
+  }
+  var sb=$('r-score-box');
+  sb.textContent=lastFinal+'/5  '+stars;
+  sb.className='result-score-box '+(passed?'score-ok':'score-fail');
+  var rb=$('r-btn');
+  if(passed){
+    rb.textContent=isLast?'Vaata tulemust 🏆':'Järgmine tuba →';
+    rb.className='btn-main';
+    rb.style.background=r.accent;
+  } else {
+    rb.textContent='Proovi uuesti 🔄';
+    rb.className='btn-retry';
+  }
+  show('s-result');
+}
+
+function resultAction(){
+  var passed=lastFinal>=PASS;
+  var isLast=roomIdx>=ROOMS.length-1;
+  if(!passed){roomScores.pop();qIdx=0;score=0;answered=false;hintShown=false;loadRoom();return;}
+  if(isLast){showVictory();return;}
+  roomIdx++;loadRoom();
+}
+
+function showVictory(){
+  var total=roomScores.reduce(function(a,b){return a+b;},0);
+  var max=ROOMS.length*5;
+  var pct=Math.round(total/max*100);
+  $('v-medal').textContent=pct===100?'🥇':pct>=80?'🥈':'🥉';
+  var msg=pct===100?'Täiuslik! Oled tõeline saksa keele meister!':pct>=80?'Väga tubli! Saksa keel läheb hästi!':'Hea töö! Harjuta veel ja saad veelgi paremaks!';
+  $('v-msg').textContent='VABA! LÕPUKS VABA! 100 aastat ootamist ja SINA vabastasid mind! '+msg+' Tausend Dank! 🎊👻';
+  var g=$('v-grid'); g.innerHTML='';
+  ROOMS.forEach(function(r,i){
+    var rs=roomScores[i]||0;
+    var st=rs===5?'⭐⭐⭐':rs>=4?'⭐⭐':'⭐';
+    var d=document.createElement('div');
+    d.className='victory-card';
+    d.style.background=r.bg;
+    d.style.borderColor=r.badge;
+    d.innerHTML='<div class="victory-card-title" style="color:'+r.tc+'">'+r.emoji+' '+r.title+'</div><div class="victory-card-score" style="color:'+r.accent+'">'+rs+'/5 <span style="font-size:12px;font-weight:400;color:'+r.tc+'">'+st+'</span></div>';
+    g.appendChild(d);
+  });
+  $('v-total').textContent=total+'/'+max+' punkti ('+pct+'%)';
+  show('s-victory');
+}
+
+buildIntroRooms();
+</script>
+</body>
+</html>
